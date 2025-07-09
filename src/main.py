@@ -15,7 +15,8 @@ background = pygame.transform.scale(background, (settings.SCREEN_WIDTH, settings
 # game init
 pygame.init()
 
-right_player = Paddle(50, settings.SCREEN_HEIGHT // 2 - 50)
+left_player = Paddle(50, settings.SCREEN_HEIGHT // 2 - 50)
+right_player = Paddle(1210, settings.SCREEN_HEIGHT // 2 - 50)
 
 # game's screen
 screen = pygame.display.set_mode((settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT))
@@ -32,11 +33,17 @@ while running:
     # keys management
     keys = pygame.key.get_pressed()
     if keys[pygame.K_z]: # Z keyboard key
-        right_player.move_up()
+        left_player.move_up()
     
     if keys[pygame.K_s]: # S keyboard key
-        right_player.move_down()
+        left_player.move_down()
     
+    if keys[pygame.K_UP]: # top arrow keyboard key
+        right_player.move_up()
+    
+    if keys[pygame.K_DOWN]: # bottom arrow keyboard key
+        right_player.move_down()
+        
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False # quit the game, if player close the game screen
@@ -45,6 +52,7 @@ while running:
     screen.blit(background, (0, 0))
     
     # display player
+    left_player.draw(screen)
     right_player.draw(screen)
     
     # update / refresh the display of the game
