@@ -24,3 +24,22 @@ class Paddle:
     
     def draw(self, surface):
         pygame.draw.rect(surface, self.color, self.rect)
+
+class Ball:
+    def __init__(self, x, y):
+        self.size = 20
+        self.color = settings.WHITE
+        self.speed_x = 5
+        self.speed_y = 5
+        self.rect = pygame.Rect(x, y, self.size, self.size)
+    
+    def move(self):
+        self.rect.x += self.speed_x
+        self.rect.y += self.speed_y
+    
+    def draw(self, surface):
+        pygame.draw.ellipse(surface, self.color, self.rect)
+    
+    def bounce_on_walls(self):
+        if self.rect.top <= 0 or self.rect.bottom >= pygame.display.get_surface().get_height():
+            self.speed_y *= -1
