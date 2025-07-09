@@ -15,10 +15,12 @@ class Paddle:
         self.rect = pygame.Rect(x, y, self.width, self.height)
         
     def move_up(self):
-        self.rect.y -= self.speed
+        if self.rect.top > 0:
+            self.rect.y -= self.speed
     
     def move_down(self):
-        self.rect.y += self.speed
+        if self.rect.bottom < pygame.display.get_surface().get_height():
+            self.rect.y += self.speed
     
     def draw(self, surface):
         pygame.draw.rect(surface, self.color, self.rect)
