@@ -4,6 +4,7 @@ changing states.
 """
 
 import pygame
+import time
 import settings
 
 class Paddle:
@@ -27,11 +28,15 @@ class Paddle:
 
 class Ball:
     def __init__(self, x, y):
+        self.start_x = x
+        self.start_y = y
         self.size = 20
         self.color = settings.WHITE
         self.speed_x = 5
         self.speed_y = 5
         self.rect = pygame.Rect(x, y, self.size, self.size)
+        self.waiting = False
+        self.wait_start_time = 0
     
     def move(self):
         self.rect.x += self.speed_x
@@ -43,3 +48,18 @@ class Ball:
     def bounce_on_walls(self):
         if self.rect.top <= 0 or self.rect.bottom >= pygame.display.get_surface().get_height():
             self.speed_y *= -1
+    
+    def reset(self):
+        self.rect.x = self.start_x
+        self.rect.y = self.start_y
+        self.speed_x *= -1 # change direction
+        self.speed_y *= -1
+        self.waiting = True
+        self.wait_start_time = time.time()  # start the timer
+    
+    def update(self):
+        if self.waiting:
+            if time.time() - self.wait_start_time >= 2: # 2 seconds
+                self.waiting = False
+        else:
+            self.move()

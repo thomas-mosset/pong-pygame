@@ -52,8 +52,11 @@ while running:
     # fill the screen with our image
     screen.blit(background, (0, 0))
     
-    ball.move()
+    # ball movement / management
+    ball.update()
     ball.bounce_on_walls()
+    if ball.rect.left <= 0 or ball.rect.right >= settings.SCREEN_WIDTH:
+        ball.reset()
     
     # display player
     left_player.draw(screen)
