@@ -53,6 +53,15 @@ class Ball:
     def bounce_on_paddle(self, paddle):
         if self.rect.colliderect(paddle.rect):
             self.speed_x *= -1
+            
+            # Calculate the distance between the center of the paddle and the center of the ball
+            offset = (self.rect.centery - paddle.rect.centery) / (paddle.height / 2)
+
+            # Change the vertical speed proportionally to the offset
+            self.speed_y = offset * 5
+            
+            # If the ball gets out of control
+            self.speed_y = max(-7, min(self.speed_y, 7))
     
     def reset(self):
         self.rect.x = self.start_x
@@ -60,7 +69,7 @@ class Ball:
         self.speed_x *= -1 # change direction
         self.speed_y *= -1
         self.waiting = True
-        self.wait_start_time = time.time()  # start the timer
+        self.wait_start_time = time.time() # start the timer
     
     def update(self):
         if self.waiting:
