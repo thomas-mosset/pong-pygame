@@ -55,6 +55,9 @@ while running:
     # ball movement / management
     ball.update()
     ball.bounce_on_walls()
+    ball.bounce_on_paddle(left_player)
+    ball.bounce_on_paddle(right_player)
+    
     if ball.rect.left <= 0 or ball.rect.right >= settings.SCREEN_WIDTH:
         ball.reset()
     

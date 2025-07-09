@@ -49,6 +49,11 @@ class Ball:
         if self.rect.top <= 0 or self.rect.bottom >= pygame.display.get_surface().get_height():
             self.speed_y *= -1
     
+    # reverses the horizontal direction (speed_x) if the ball hits the paddle.
+    def bounce_on_paddle(self, paddle):
+        if self.rect.colliderect(paddle.rect):
+            self.speed_x *= -1
+    
     def reset(self):
         self.rect.x = self.start_x
         self.rect.y = self.start_y
