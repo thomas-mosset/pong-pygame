@@ -5,6 +5,8 @@ import os
 import pygame
 import settings # import all settings from the settings.py file
 
+from game import Paddle
+
 image_path = os.path.join(os.path.dirname(__file__), '..', 'assets', 'images', 'freepik__bg.png')
 background = pygame.image.load(image_path)
 background = pygame.transform.scale(background, (settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT)) # rescale and adapt the background to my screen size
@@ -12,6 +14,8 @@ background = pygame.transform.scale(background, (settings.SCREEN_WIDTH, settings
 
 # game init
 pygame.init()
+
+right_player = Paddle(50, settings.SCREEN_HEIGHT // 2 - 50)
 
 # game's screen
 screen = pygame.display.set_mode((settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT))
@@ -25,12 +29,23 @@ running = True
 while running:
     clock.tick(settings.FPS) # limit the game to 60 FPS
     
+    # keys management
+    keys = pygame.key.get_pressed()
+    if keys[pygame.K_z]: # Z keyboard key
+        right_player.move_up()
+    
+    if keys[pygame.K_s]: # S keyboard key
+        right_player.move_down()
+    
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False # quit the game, if player close the game screen
     
     # fill the screen with our image
     screen.blit(background, (0, 0))
+    
+    # display player
+    right_player.draw(screen)
     
     # update / refresh the display of the game
     pygame.display.flip()
