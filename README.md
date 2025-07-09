@@ -36,5 +36,5 @@ python main.py
 Si utilisation de Watchdog (permet de surveiller les changements dans le fichier pour refresh le jeu automatiquement) :
 
 ```sh
-watchmedo auto-restart --patterns="*.py" --recursive -- python flappy.py
+watchmedo auto-restart --patterns="*.py" --recursive -- python main.py
 ```
