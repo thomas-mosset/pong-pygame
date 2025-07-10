@@ -6,6 +6,7 @@ This file contains all the settings for the game.
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 BROWN = (42, 36, 24)
+YELLOWISH = (255, 180, 80)
 
 # Game settings
 GAME_TITLE = "Pong"

@@ -10,6 +10,8 @@ from score import Score
 
 from font import load_font
 
+from menu import ModeMenu
+
 from audio import play_goal_sound
 
 # 44100 => most common frequency for audio files
@@ -35,6 +37,11 @@ background = pygame.image.load(image_path).convert() # .convert() -> optimizatio
 
 # game's FPS
 clock = pygame.time.Clock()
+
+
+# game's beginning menu
+menu = ModeMenu(screen)
+selected_mode = menu.show_menu()
 
 def show_end_screen(winner):
     winner_font = load_font(60)
