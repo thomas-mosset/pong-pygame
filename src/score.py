@@ -2,19 +2,22 @@
 Score class for scoring
 """
 
+import os
 import pygame
 import settings
+
+from font import load_font
 
 class Score:
     def __init__(self):
         self.left = 0
         self.right = 0
-        self.font = pygame.font.Font(None, settings.FONT_SIZE)
+        self.font = load_font(settings.FONT_SIZE)
         self.color = settings.WHITE
     
     def draw(self, surface, screen_width):
         text = self.font.render(f"{self.left} | {self.right}", True, self.color)
-        text_rect = text.get_rect(center=(screen_width // 2, 30))
+        text_rect = text.get_rect(center=(screen_width // 2, 50))
         surface.blit(text, text_rect)
     
     def point_left(self):
