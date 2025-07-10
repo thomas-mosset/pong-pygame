@@ -6,6 +6,7 @@ import pygame
 import settings # import all settings from the settings.py file
 
 from game import Paddle, Ball
+from score import Score
 
 image_path = os.path.join(os.path.dirname(__file__), '..', 'assets', 'images', 'freepik__bg.png')
 background = pygame.image.load(image_path)
@@ -18,6 +19,7 @@ pygame.init()
 left_player = Paddle(50, settings.SCREEN_HEIGHT // 2 - 50)
 right_player = Paddle(1210, settings.SCREEN_HEIGHT // 2 - 50)
 ball = Ball(settings.SCREEN_WIDTH // 2 - 10, settings.SCREEN_HEIGHT // 2 - 10)
+score = Score()
 
 # game's screen
 screen = pygame.display.set_mode((settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT))
@@ -58,7 +60,11 @@ while running:
     ball.bounce_on_paddle(left_player)
     ball.bounce_on_paddle(right_player)
     
-    if ball.rect.left <= 0 or ball.rect.right >= settings.SCREEN_WIDTH:
+    if ball.rect.left <= 0:
+        score.point_right()
+        ball.reset()
+    elif ball.rect.right >= settings.SCREEN_WIDTH:
+        score.point_left()
         ball.reset()
     
     # display player
@@ -67,6 +73,9 @@ while running:
     
     # display ball
     ball.draw(screen)
+    
+    # displai score
+    score.draw(screen, settings.SCREEN_WIDTH)
     
     # update / refresh the display of the game
     pygame.display.flip()

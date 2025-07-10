@@ -1,0 +1,24 @@
+"""
+Score class for scoring
+"""
+
+import pygame
+import settings
+
+class Score:
+    def __init__(self):
+        self.left = 0
+        self.right = 0
+        self.font = pygame.font.Font(None, settings.FONT_SIZE)
+        self.color = settings.WHITE
+    
+    def draw(self, surface, screen_width):
+        text = self.font.render(f"{self.left} | {self.right}", True, self.color)
+        text_rect = text.get_rect(center=(screen_width // 2, 30))
+        surface.blit(text, text_rect)
+    
+    def point_left(self):
+        self.left += 1
+    
+    def point_right(self):
+        self.right += 1
