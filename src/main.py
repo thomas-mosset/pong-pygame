@@ -11,6 +11,7 @@ from score import Score
 from font import load_font
 
 from menu import ModeMenu
+from mode import GameMode
 
 from audio import play_goal_sound
 
@@ -43,6 +44,9 @@ clock = pygame.time.Clock()
 menu = ModeMenu(screen)
 selected_mode = menu.show_menu()
 
+# game's mode (1v1 or 1vAI)
+game_mode = GameMode(selected_mode)
+
 def show_end_screen(winner):
     winner_font = load_font(60)
     replay_font = load_font(40)
@@ -72,21 +76,20 @@ while running:
     
     # keys management
     keys = pygame.key.get_pressed()
+    
+    # Player 1
     if keys[pygame.K_z]: # Z keyboard key
         left_player.move_up()
     
     if keys[pygame.K_s]: # S keyboard key
         left_player.move_down()
     
-    if keys[pygame.K_UP]: # top arrow keyboard key
-        right_player.move_up()
-    
-    if keys[pygame.K_DOWN]: # bottom arrow keyboard key
-        right_player.move_down()
+    # Player 2 (actual player or AI), dealt in the mode.py file
+    game_mode.control_right_paddle(right_player, ball, keys)
         
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            running = False # quit the game, if player close the game screen
+            running = False # quit the game, if player closes the game screen
     
     # fill the screen with our image
     screen.blit(background, (0, 0))
