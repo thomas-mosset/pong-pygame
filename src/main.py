@@ -8,6 +8,8 @@ import settings # import all settings from the settings.py file
 from game import Paddle, Ball
 from score import Score
 
+from font import load_font
+
 from audio import play_goal_sound
 
 # 44100 => most common frequency for audio files
@@ -33,6 +35,28 @@ background = pygame.image.load(image_path).convert() # .convert() -> optimizatio
 
 # game's FPS
 clock = pygame.time.Clock()
+
+def show_end_screen(winner):
+    winner_font = load_font(60)
+    replay_font = load_font(40)
+    
+    waiting = True
+    while waiting:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                exit()
+            elif event.type == pygame.KEYDOWN and event.key == pygame.K_r: # "r" key from the keyboard to replay
+                waiting = False
+        
+        screen.fill(settings.BROWN)
+        winner_text = winner_font.render(f"{winner} a gagné !", True, (settings.WHITE))
+        replay_text = replay_font.render("Appuie sur la touche 'R' pour rejouer", True, (settings.WHITE))
+        
+        screen.blit(winner_text, winner_text.get_rect(center=(settings.SCREEN_WIDTH // 2, settings.SCREEN_HEIGHT // 2 - 40)))
+        screen.blit(replay_text, replay_text.get_rect(center=(settings.SCREEN_WIDTH // 2, settings.SCREEN_HEIGHT // 2 + 30)))
+        
+        pygame.display.flip()
 
 # main game's loop
 running = True
@@ -75,6 +99,17 @@ while running:
         play_goal_sound() # sound triggered when a point is added
         ball.reset()
     
+    # if a player has 5 points : game is over
+    if score.left >= 5 or score.right >= 5:
+        winner = "Joueur 1" if score.left >= 5 else "Joueur 2"
+        show_end_screen(winner)
+        
+        # Reset score et positions
+        score = Score()
+        ball.reset()
+        left_player = Paddle(50, settings.SCREEN_HEIGHT // 2 - 50)
+        right_player = Paddle(1210, settings.SCREEN_HEIGHT // 2 - 50)
+    
     # display player
     left_player.draw(screen)
     right_player.draw(screen)
@@ -82,7 +117,7 @@ while running:
     # display ball
     ball.draw(screen)
     
-    # displai score
+    # display score
     score.draw(screen, settings.SCREEN_WIDTH)
     
     # update / refresh the display of the game
