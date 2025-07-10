@@ -14,7 +14,7 @@ class Paddle:
         self.width = 20
         self.height = 100
         self.color = settings.WHITE
-        self.speed = 5
+        self.speed = 7
         self.rect = pygame.Rect(x, y, self.width, self.height)
         
     def move_up(self):
