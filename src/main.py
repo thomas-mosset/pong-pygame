@@ -8,6 +8,14 @@ import settings # import all settings from the settings.py file
 from game import Paddle, Ball
 from score import Score
 
+from audio import play_goal_sound
+
+# 44100 => most common frequency for audio files
+# -16 => 16-bit signed sound
+# 2 => stereo sound (left/right)
+# 512 => buffer size
+pygame.mixer.pre_init(44100, -16, 2, 512) 
+
 # game init
 pygame.init()
 
@@ -60,9 +68,11 @@ while running:
     
     if ball.rect.left <= 0:
         score.point_right()
+        play_goal_sound() # sound triggered when a point is added
         ball.reset()
     elif ball.rect.right >= settings.SCREEN_WIDTH:
         score.point_left()
+        play_goal_sound() # sound triggered when a point is added
         ball.reset()
     
     # display player
