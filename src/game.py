@@ -7,6 +7,8 @@ import pygame
 import time
 import settings
 
+from audio import play_ball_bounce
+
 class Paddle:
     def __init__(self, x, y):
         self.width = 20
@@ -48,11 +50,15 @@ class Ball:
     def bounce_on_walls(self):
         if self.rect.top <= 0 or self.rect.bottom >= pygame.display.get_surface().get_height():
             self.speed_y *= -1
+            
+            play_ball_bounce() # trigger sound when ball bounces on a wall
     
     # reverses the horizontal direction (speed_x) if the ball hits the paddle.
     def bounce_on_paddle(self, paddle):
         if self.rect.colliderect(paddle.rect):
             self.speed_x *= -1
+            
+            play_ball_bounce() # trigger sound when ball bounces on a paddle
             
             ## Realistic bounce
             # Calculate the distance between the center of the paddle and the center of the ball
