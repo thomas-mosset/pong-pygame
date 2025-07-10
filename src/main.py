@@ -8,11 +8,6 @@ import settings # import all settings from the settings.py file
 from game import Paddle, Ball
 from score import Score
 
-image_path = os.path.join(os.path.dirname(__file__), '..', 'assets', 'images', 'freepik__bg.png')
-background = pygame.image.load(image_path)
-background = pygame.transform.scale(background, (settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT)) # rescale and adapt the background to my screen size
-
-
 # game init
 pygame.init()
 
@@ -24,6 +19,9 @@ score = Score()
 # game's screen
 screen = pygame.display.set_mode((settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT))
 pygame.display.set_caption(settings.GAME_TITLE)
+
+image_path = os.path.join(os.path.dirname(__file__), '..', 'assets', 'images', 'freepik__bg.jpg')
+background = pygame.image.load(image_path).convert() # .convert() -> optimization for bg image
 
 # game's FPS
 clock = pygame.time.Clock()
