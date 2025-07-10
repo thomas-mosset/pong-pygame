@@ -34,8 +34,8 @@ class Ball:
         self.start_y = y
         self.size = 20
         self.color = settings.WHITE
-        self.speed_x = 5
-        self.speed_y = 5
+        self.speed_x = 7
+        self.speed_y = 7
         self.rect = pygame.Rect(x, y, self.size, self.size)
         self.waiting = False
         self.wait_start_time = 0
@@ -89,8 +89,8 @@ class Ball:
     def reset(self):
         self.rect.x = self.start_x
         self.rect.y = self.start_y
-        self.speed_x = 5 * (-1 if self.speed_x > 0 else 1) # change direction
-        self.speed_y *= 5
+        self.speed_x = 7 * (-1 if self.speed_x > 0 else 1) # change direction
+        self.speed_y = 7
         self.waiting = True
         self.wait_start_time = time.time() # start the timer
     
