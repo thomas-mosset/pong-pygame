@@ -55,3 +55,34 @@ class ModeMenu:
             self.screen.blit(rendered, rendered.get_rect(center=(settings.SCREEN_WIDTH // 2, 300 + i * 60)))
 
         pygame.display.flip()
+        
+    def choose_difficulty(self):
+        difficulties = ["Facile", "Moyen", "Difficile"]
+        selected_index  = 0
+        font = load_font(40)
+        
+        choosing = True
+        
+        while choosing:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    exit()
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_UP:
+                        selected_index = (selected_index - 1) % len(difficulties)
+                    elif event.key == pygame.K_DOWN:
+                        selected_index = (selected_index + 1) % len(difficulties)
+                    elif event.key == pygame.K_RETURN:
+                        return difficulties[selected_index].lower() # "facile", "moyen", "difficile"
+            
+            self.screen.fill(settings.BROWN)
+            title = font.render("Difficulté IA :", True, settings.WHITE)
+            self.screen.blit(title, title.get_rect(center=(settings.SCREEN_WIDTH // 2, 200)))
+            
+            for i, difficulty in enumerate(difficulties):
+                color = (settings.YELLOWISH) if i == selected_index else (settings.WHITE)
+                text = font.render(difficulty, True, color)
+                self.screen.blit(text, text.get_rect(center=(settings.SCREEN_WIDTH // 2, 280 + i * 60)))
+            
+            pygame.display.flip()

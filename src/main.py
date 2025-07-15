@@ -44,8 +44,12 @@ clock = pygame.time.Clock()
 menu = ModeMenu(screen)
 selected_mode = menu.show_menu()
 
+AI_difficulty = None
+if selected_mode == "1vAI":
+    AI_difficulty = menu.choose_difficulty()
+
 # game's mode (1v1 or 1vAI)
-game_mode = GameMode(selected_mode)
+game_mode = GameMode(selected_mode, AI_difficulty)
 
 def show_end_screen(winner):
     winner_font = load_font(60)
