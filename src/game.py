@@ -25,6 +25,14 @@ class Paddle:
         if self.rect.bottom < pygame.display.get_surface().get_height():
             self.rect.y += self.speed
     
+    def move_ai_player(self, target_y, ai_speed=4):
+        # + / - 10 -> tolerance zone to avoid constant back and forth movements    
+        if self.rect.centery < target_y - 10:
+            # ai paddle can't go out (above or below) our screen
+            self.rect.y = min(settings.SCREEN_HEIGHT - self.rect.height, self.rect.y + ai_speed)
+        elif self.rect.centery > target_y + 10:
+            self.rect.y = max(0, self.rect.y - ai_speed)
+    
     def draw(self, surface):
         pygame.draw.rect(surface, self.color, self.rect)
 

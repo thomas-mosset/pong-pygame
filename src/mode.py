@@ -13,12 +13,11 @@ class GameMode:
 
     def control_right_paddle(self, paddle, ball, keys):
         if self.is_ai_enabled():
-            # Simple AI: Follows the ball vertically
-            if ball.rect.centery < paddle.rect.centery:
-                paddle.move_up()
-            elif ball.rect.centery > paddle.rect.centery:
-                paddle.move_down()
+            # Only reacts if the ball goes to the right player (ball.speed_x)
+            if ball.speed_x > 0:
+               paddle.move_ai_player(ball.rect.centery)
         else:
+            # human player :
             # top arrow keyboard key
             if keys[pygame.K_UP]:
                 paddle.move_up()
