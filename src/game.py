@@ -56,9 +56,16 @@ class Ball:
         pygame.draw.ellipse(surface, self.color, self.rect)
     
     def bounce_on_walls(self):
-        if self.rect.top <= 0 or self.rect.bottom >= pygame.display.get_surface().get_height():
-            self.speed_y *= -1
+        screen_height = pygame.display.get_surface().get_height()
+        
+        if self.rect.top <= 0:
+            self.rect.top = 0
+            self.speed_y = abs(self.speed_y)  # towards bottom (positive)
+            play_ball_bounce()
             
+        elif self.rect.bottom >= screen_height:
+            self.rect.bottom = screen_height
+            self.speed_y = -abs(self.speed_y)  # towards top (negative)
             play_ball_bounce() # trigger sound when ball bounces on a wall
     
     # reverses the horizontal direction (speed_x) if the ball hits the paddle.
