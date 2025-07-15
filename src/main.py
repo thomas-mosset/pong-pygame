@@ -115,7 +115,7 @@ while running:
     
     # if a player has 5 points : game is over
     if score.left >= 5 or score.right >= 5:
-        winner = "Joueur 1" if score.left >= 5 else "Joueur 2"
+        winner = score.get_winner(game_mode)
         show_end_screen(winner)
         
         # Reset score et positions

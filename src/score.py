@@ -29,10 +29,10 @@ class Score:
     def is_game_over(self):
         return self.left >= settings.MAX_SCORE or self.right >= settings.MAX_SCORE
 
-    def get_winner(self):
+    def get_winner(self, game_mode):
         if self.left >= settings.MAX_SCORE:
             return "Joueur 1"
         elif self.right >= settings.MAX_SCORE:
-            return 'Joueur 2'
+            return "L'ordinateur" if game_mode.is_ai_enabled() else "Joueur 2"
         
         return None
