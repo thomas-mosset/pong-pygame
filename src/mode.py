@@ -17,7 +17,7 @@ class GameMode:
             # Only reacts if the ball goes to the right player (ball.speed_x)
             if ball.speed_x > 0:
                AI_speed = self.get_AI_speed()
-               paddle.move_ai_player(ball.rect.centery)
+               paddle.move_ai_player(ball.rect.centery, AI_speed)
         else:
             # human player :
             # top arrow keyboard key
@@ -29,10 +29,10 @@ class GameMode:
     
     def get_AI_speed(self):
         if self.AI_difficulty == "facile":
-            return 3
+            return 4
         elif self.AI_difficulty == "moyen":
             return 6
         elif self.AI_difficulty == "difficile":
-            return 9
+            return 8
         
         return 6 # fallback
