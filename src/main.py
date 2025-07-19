@@ -13,9 +13,6 @@ from font import load_font
 from menu import ModeMenu
 from mode import GameMode
 
-# from voice_control import listen_command
-import threading
-
 from audio import play_goal_sound
 
 # Speech recognition
