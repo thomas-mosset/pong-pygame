@@ -88,6 +88,17 @@ while running:
     if keys[pygame.K_s]: # S keyboard key
         left_player.move_down()
     
+    if keys[pygame.K_ESCAPE]: # ESC keyboard key
+        choice = menu.pause_menu()
+        
+        if choice == "reprendre":
+            pass # resume to game
+        elif choice == "retourner au menu principal":
+            selected_mode = menu.show_menu()
+        elif choice == "quitter le jeu":
+            pygame.quit()
+            exit()
+    
     # Player 2 (actual player or AI), dealt in the mode.py file
     game_mode.control_right_paddle(right_player, ball, keys)
         

@@ -86,3 +86,35 @@ class ModeMenu:
                 self.screen.blit(text, text.get_rect(center=(settings.SCREEN_WIDTH // 2, 280 + i * 60)))
             
             pygame.display.flip()
+    
+    def pause_menu(self):
+        choices = ['Reprendre', 'Retourner au menu principal', 'Quitter le jeu']
+        selected_index = 0
+        font = load_font(40)
+        
+        choosing = True
+        
+        while choosing:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    exit()
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_UP:
+                        selected_index = (selected_index - 1) % len(choices)
+                    elif event.key == pygame.K_DOWN:
+                        selected_index = (selected_index + 1) % len(choices)
+                    elif event.key == pygame.K_RETURN:
+                        choice = choices[selected_index].lower()
+                        return choice
+            
+            self.screen.fill(settings.BROWN)
+            title = font.render("Pause", True, settings.WHITE)
+            self.screen.blit(title, title.get_rect(center=(settings.SCREEN_WIDTH // 2, 200)))
+            
+            for i, choice in enumerate(choices):
+                color = (settings.YELLOWISH) if i == selected_index else (settings.WHITE)
+                text = font.render(choice, True, color)
+                self.screen.blit(text, text.get_rect(center=(settings.SCREEN_WIDTH // 2, 280 + i * 60)))
+            
+            pygame.display.flip()
