@@ -86,3 +86,34 @@ class ModeMenu:
                 self.screen.blit(text, text.get_rect(center=(settings.SCREEN_WIDTH // 2, 280 + i * 60)))
             
             pygame.display.flip()
+            
+    def choose_control_method_against_AI(self):
+        control_method_choices = ["Clavier", "Voix - Béta buguée"]
+        selected_index  = 0
+        font = load_font(40)
+        
+        choosing = True
+        
+        while choosing:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    exit()
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_UP:
+                        selected_index = (selected_index - 1) % len(control_method_choices)
+                    elif event.key == pygame.K_DOWN:
+                        selected_index = (selected_index + 1) % len (control_method_choices)
+                    elif event.key == pygame.K_RETURN or event.key == pygame.K_KP_ENTER: # to validate selection
+                        return control_method_choices[selected_index].lower()
+                        
+            self.screen.fill(settings.BROWN)
+            title = font.render("Choix du contrôle du joueur 1 :", True, settings.WHITE)
+            self.screen.blit(title, title.get_rect(center=(settings.SCREEN_WIDTH // 2, 200)))
+            
+            for i, choice in enumerate(control_method_choices):
+                color = (settings.YELLOWISH) if i == selected_index else (settings.WHITE)
+                text = font.render(choice, True, color)
+                self.screen.blit(text, text.get_rect(center=(settings.SCREEN_WIDTH // 2, 280 + i * 60)))
+            
+            pygame.display.flip()

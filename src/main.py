@@ -13,7 +13,15 @@ from font import load_font
 from menu import ModeMenu
 from mode import GameMode
 
+# from voice_control import listen_command
+import threading
+
 from audio import play_goal_sound
+
+# Speech recognition
+import threading
+import time
+import speech_recognition 
 
 # 44100 => most common frequency for audio files
 # -16 => 16-bit signed sound
@@ -39,17 +47,85 @@ background = pygame.image.load(image_path).convert() # .convert() -> optimizatio
 # game's FPS
 clock = pygame.time.Clock()
 
-
 # game's beginning menu
 menu = ModeMenu(screen)
 selected_mode = menu.show_menu()
 
+# AI difficulty + voice recognition against AI
 AI_difficulty = None
+
 if selected_mode == "1vAI":
+    # for AI difficulty choice
     AI_difficulty = menu.choose_difficulty()
+    
+    # for paddle control method choice
+    control_choice = menu.choose_control_method_against_AI()
+    voice_control_enabled = (control_choice == "voix")
+else:
+    voice_control_enabled = False
 
 # game's mode (1v1 or 1vAI)
 game_mode = GameMode(selected_mode, AI_difficulty)
+
+# Speech recognition against AI
+voice_command = None
+voice_command_timer = 0
+
+# TODO : Recalibrate (lag between dictated command and in-game action + command often not understood especially when there is noise)
+def voice_loop():            
+    global voice_command, voice_command_timer
+    
+    last_command_time = time.time()
+    recognizer = speech_recognition.Recognizer()
+
+    with speech_recognition.Microphone() as source:
+        recognizer.adjust_for_ambient_noise(source, duration=0.3)
+        print("Micro calibré")
+
+        while not stop_event.is_set():
+            print("\n🎙️🟢 DÉBUT DE L'ÉCOUTE : Parle maintenant ('monter', 'descendre', 'stop')")
+            
+            try:
+                audio = recognizer.listen(source, timeout=0.3, phrase_time_limit=0.8)
+                print("🎙️🔴 FIN DE L'ÉCOUTE : Traitement en cours...")
+
+                command = recognizer.recognize_google(audio, language="fr-FR").lower()
+                print(f"✅ Reconnu : {command}")
+
+                if any(word in command for word in ["haut", "monte", "monter", "top"]):
+                    voice_command = "up"
+                    last_command_time = time.time()
+                elif any(word in command for word in ["bas", "descend", "descendre", "bottom"]):
+                    voice_command = "down"
+                    last_command_time = time.time()
+                elif any(word in command for word in ["stop", "arrête", "pause", "arrêter"]):
+                    voice_command = None
+                    print("Commande stop reçue")
+                else:
+                    print("Commande non reconnue")
+
+            except speech_recognition.WaitTimeoutError:
+                pass # silence = normal
+            except speech_recognition.UnknownValueError:
+                print("Pas compris")
+            except speech_recognition.RequestError as e:
+                print(f"Erreur API : {e}")
+            except Exception as e:
+                print(f"Erreur inattendue : {e}")
+
+            time.sleep(0.05)
+            
+            # Reset the command after 0.5s if nothing new
+            if voice_command is not None and time.time() - last_command_time > 0.8:
+                voice_command = None
+
+stop_event = threading.Event()
+
+
+# voice recognition only available while playing against the AI
+if selected_mode == "1vAI" and voice_control_enabled:
+    threading.Thread(target=voice_loop, daemon=True).start()
+
 
 def show_end_screen(winner):
     winner_font = load_font(60)
@@ -82,11 +158,23 @@ while running:
     keys = pygame.key.get_pressed()
     
     # Player 1
-    if keys[pygame.K_z]: # Z keyboard key
-        left_player.move_up()
-    
-    if keys[pygame.K_s]: # S keyboard key
-        left_player.move_down()
+    if game_mode.is_ai_enabled() and voice_control_enabled:
+        # print(f"Commande reçue dans la boucle principale : {voice_command}")
+        
+        if voice_command == "up":
+            print("🟢 Mouvement vers le haut déclenché")
+            left_player.move_up()
+            # voice_command = None
+        elif voice_command == "down":
+            print("🟢 Mouvement vers le bas déclenché")
+            left_player.move_down()
+            # voice_command = None
+    else:
+        if keys[pygame.K_z]: # Z keyboard key
+            left_player.move_up()
+        
+        if keys[pygame.K_s]: # S keyboard key
+            left_player.move_down()
     
     # Player 2 (actual player or AI), dealt in the mode.py file
     game_mode.control_right_paddle(right_player, ball, keys)
@@ -94,6 +182,7 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False # quit the game, if player closes the game screen
+            stop_event.set() # voice thread stop
     
     # fill the screen with our image
     screen.blit(background, (0, 0))
@@ -136,6 +225,10 @@ while running:
     
     # update / refresh the display of the game
     pygame.display.flip()
+
+
+# For safety, to ensure that the voice thread stops
+stop_event.set()
 
 # quit pygame
 pygame.quit()
