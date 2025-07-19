@@ -94,7 +94,16 @@ while running:
         if choice == "reprendre":
             pass # resume to game
         elif choice == "retourner au menu principal":
+            # display menu
             selected_mode = menu.show_menu()
+            
+            # reset all game objects
+            left_player = Paddle(50, settings.SCREEN_HEIGHT // 2 - 50)
+            right_player = Paddle(1210, settings.SCREEN_HEIGHT // 2 - 50)
+            ball = Ball(settings.SCREEN_WIDTH // 2 - 10, settings.SCREEN_HEIGHT // 2 - 10)
+            score = Score()
+            game_mode = GameMode(selected_mode, AI_difficulty)
+            
         elif choice == "quitter le jeu":
             pygame.quit()
             exit()
